@@ -1,0 +1,3 @@
+D:/OneDrive - mail2.sysu.edu.cn/应用/mySloc/cmake-build-debug/CMakeFiles/mySloc.dir
+D:/OneDrive - mail2.sysu.edu.cn/应用/mySloc/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/OneDrive - mail2.sysu.edu.cn/应用/mySloc/cmake-build-debug/CMakeFiles/rebuild_cache.dir
