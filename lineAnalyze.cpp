@@ -8,7 +8,6 @@ void fileProcess::lineAnalyze(fs::path directoryPath) {
     int fileNumOfThis = 0;
 
     wstring fileName = directoryPath.filename().wstring();
-
     int commentTotal = 0;
     int blankTotal = 0;
     int statementTotal = 0;
