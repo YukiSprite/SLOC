@@ -1,4 +1,4 @@
-### Sloc（count the Source Line Of Code)
+### Sloc（count the Source Line of Code)
 #### 项目介绍
 本项目是一个代码统计项目，可以分析你的代码的风格。我把代码分为三种：comment line, blank line and statement line.
 在这个版本中，我只处理"//"类型的注释，不处理"*/"类型的注释
