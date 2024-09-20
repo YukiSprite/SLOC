@@ -1,11 +1,11 @@
 ### Sloc（count the Source Line of Code)
 #### 项目介绍
-本项目是一个代码统计项目，可以分析你的代码的风格。我把代码分为三种：comment line, blank line and statement line.
-在这个版本中，我只处理"//"类型的注释，不处理"*/"类型的注释
-- 如果一行代码以//开头，则为comment line
-- 若整一行都是空的，则为blank line
+本项目的目标是统计代码行数，未来目标增加分析代码的风格功能。本项目把代码分为三种：comment line, blank line and statement line.
+在这个版本中，只处理"//"类型的注释，不处理"*/"类型的注释
+- 若整行代码以//开头，则为comment line
+- 若整行为空，则为blank line
 - 否则就是statement line
-目前默认处理c语言和c++的文件，可以在lineAnalyze.cpp中增加你们需要的文件类型
+目前默认处理c语言和c++的文件(后缀为".c",".h",".cpp",".hpp"),可以在lineAnalyze.cpp中增加目标代码类型
 #### 指令表如下：
 - \H: list out all command
 - \E: regular start
