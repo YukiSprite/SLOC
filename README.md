@@ -1,6 +1,6 @@
 ### Sloc
 #### 项目介绍
-本项目是一个代码统计项目，可以分析你的代码的风格。我把代码分为三种：comment line, blank line and statement line.
+本项目是一个代码统计项目，可以分析你的代码的风格。我把代码分为三种：commentNum line, blankNum line and statementNum line.
 在这个版本中，我只处理"//"类型的注释，不处理"*/"类型的注释
 - 如果一行代码以//开头，则为comment line
 - 若整一行都是空的，则为blank line

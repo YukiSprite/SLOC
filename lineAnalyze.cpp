@@ -20,7 +20,7 @@ void fileProcess::lineAnalyze(fs::path directoryPath) {
             if (extension.empty()) {
                 continue;
             }
-//            the line under can be freely changed, to analyze the code type
+//            the line under can be freely changed, to analyze the code type you prefer
             if (extension == L".cpp" || extension == L".hpp" || extension == L".c" || extension == L".h") {
                 fileNumOfThis++;
                 wstring currName = entry.filename().wstring();
@@ -69,9 +69,9 @@ void fileProcess::lineAnalyze(fs::path directoryPath) {
     }
 }
 
-void fileProcess::add(wstring _fileName, int _comment, int _blank, int _statement, int _fileNum) {
+void fileProcess::add(wstring _fileName, int _commentNum, int _blankNum, int _statementNum, int _fileNum) {
     if (this->p == nullptr) {
-        this->p = new fileNode(_fileName, _comment, _blank, _statement, _fileNum);
+        this->p = new fileNode(_fileName, _commentNum, _blankNum, _statementNum, _fileNum);
         this->p->next = nullptr;
         len++;
         return;
@@ -80,7 +80,7 @@ void fileProcess::add(wstring _fileName, int _comment, int _blank, int _statemen
     while (current->next != nullptr) {
         current = current->next;
     }
-    current->next = new fileNode(_fileName, _comment, _blank, _statement, _fileNum);
+    current->next = new fileNode(_fileName, _commentNum, _blankNum, _statementNum, _fileNum);
     current->next->next = nullptr;
     len++;
 }
@@ -110,7 +110,7 @@ int get_display_width(const std::wstring& str) {
     }
     return width;
 }
-//上面这两个函数是从网上找的妙妙工具，专门用来处理非英文的字符串，不要修改，改了的话我也不会改回来
+//上面这两个函数是从网上找的妙妙工具，专门用来处理非英文的字符串，do not change，I don't know how they work
 void fileProcess::print() {
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     int width;
@@ -122,7 +122,7 @@ void fileProcess::print() {
     const int extraWidth = 2;  // 中文文件名额外的宽度补偿
 
     wcout << L"totally " << len << L" items           ";
-    wcout << L"statement" << L" " << L"comment" << L"  " << L"blank  ";
+    wcout << L"statementNum" << L" " << L"commentNum" << L"  " << L"blankNum  ";
     wcout << L"perBlank  " << L"perComment  " << L"avgStmt  " << L"avgLine  " << endl;
     for (int i = 0; i < width; i++) {
         wcout << L"=";
@@ -131,7 +131,7 @@ void fileProcess::print() {
 
     fileNode* count = p;
     while (count != nullptr) {
-        int totalLine = count->statement + count->blank + count->comment;
+        int totalLine = count->statementNum + count->blankNum + count->commentNum;
         if (totalLine == 0) {
             totalLine = 1;
         }
@@ -151,33 +151,78 @@ void fileProcess::print() {
         if (namePadding > 0) {
             wcout << std::wstring(namePadding, L' ');
         }
-//        这里是为了显示对齐而找的代码，不要动，我不会修
+//        这里是为了显示对齐而找的代码，do not change
 
         wcout << right << setw(3) << count->fileNum;
-        wcout << setw(10) << count->statement;
-        wcout << setw(8) << count->comment;
-        wcout << setw(7) << count->blank;
+        wcout << setw(10) << count->statementNum;
+        wcout << setw(8) << count->commentNum;
+        wcout << setw(7) << count->blankNum;
         wcout << setw(9) << fixed << setprecision(2)
-              << (static_cast<double>(count->blank) / totalLine) * 100 << L'%';
+              << (static_cast<double>(count->blankNum) / totalLine) * 100 << L'%';
         wcout << setw(11) << fixed << setprecision(2)
-              << (static_cast<double>(count->comment) / totalLine) * 100 << L'%';
+              << (static_cast<double>(count->commentNum) / totalLine) * 100 << L'%';
         wcout << setw(9) << fixed << setprecision(2)
-              << static_cast<double>(count->statement) / count->fileNum;
+              << static_cast<double>(count->statementNum) / count->fileNum;
         wcout << setw(11) << fixed << setprecision(2)
               << static_cast<double>(totalLine) / count->fileNum << endl;
 
         count = count->next;
     }
 }
+void fileProcess::excelPrint(wstring optp) {
+    using namespace OpenXLSX;
+    XLDocument doc;
+    try {
+        wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+        string outputPath = conv.to_bytes(optp);
+        doc.create(outputPath);
+    } catch (const exception& e) {
+        cerr<<"cannot create file"<<endl;
+    }
+    auto wks = doc.workbook().worksheet("Sheet1");
+//    wcout << L"totally " << len << L" items           ";
+//    wcout << L"statementNum" << L" " << L"commentNum" << L"  " << L"blankNum  ";
+//    wcout << L"perBlank  " << L"perComment  " << L"avgStmt  " << L"avgLine  " << endl;
+    wks.cell("A1").value() = "totally"+to_string(len)+"items";
+    wks.cell("B1").value() = NULL;
+    wks.cell("C1").value() = "statementNum";
+    wks.cell("D1").value() = "commentNum";
+    wks.cell("E1").value() = "blankNum";
+    wks.cell("F1").value() = "perBalnk";
+    wks.cell("G1").value() = "perComment";
+    wks.cell("H1").value() = "avgStmt";
+    wks.cell("I1").value() = "avgLine";
+    fileNode* currentNode = p;
+    wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+    int row = 2;
+    int totalLine = currentNode->statementNum + currentNode->blankNum + currentNode->commentNum;
+//    covert wstring to string helper
+    while (currentNode){
+        string fileNameStr = conv.to_bytes(currentNode->fileName);
+        wks.cell(row, 1).value() = fileNameStr;
+        wks.cell(row, 2).value() = currentNode->fileNum;
+        wks.cell(row, 3).value() = currentNode->statementNum;
+        wks.cell(row, 4).value() = currentNode->commentNum;
+        wks.cell(row, 5).value() = currentNode->blankNum;
+        wks.cell(row, 6).value() = (static_cast<double>(currentNode->blankNum) / totalLine) * 100;
+        wks.cell(row, 7).value() = (static_cast<double>(currentNode->commentNum) / totalLine) * 100;
+        wks.cell(row, 8).value() = static_cast<double>(currentNode->statementNum) / currentNode->fileNum;
+        wks.cell(row, 9).value() = static_cast<double>(totalLine) / currentNode->fileNum;
+        currentNode = currentNode->next;
+        row++;
+    }
 
+    doc.save();
+    doc.close();
+}
 
 
 fileProcess::~fileProcess() {
-    fileNode* current = p;
-    while (current != nullptr) {
-        fileNode* nextNode = current->next;
-        delete current;
-        current = nextNode;
+    fileNode* curr = p;
+    while (curr != nullptr) {
+        fileNode* nextNode = curr->next;
+        delete curr;
+        curr = nextNode;
     }
     p = nullptr;
 }

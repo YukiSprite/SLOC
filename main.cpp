@@ -31,14 +31,35 @@ int main() {
             printCommand();
         } else if (command == L"-E") {
             try {
-                wcout << L"please enter path: ";
+                wstring isExcelChar;
+                bool isExcel;
+                wcout<<L"do you want to ouput as an excel document? if yes enter yes, or no"<<endl;
+                wcin>>isExcelChar;
+                wcout << L"please enter path: "<<endl;
                 wstring tmp;
                 wcin >> tmp;
+                if (isExcelChar == L"yes") {
+                    isExcel = true;
+                }else if (isExcelChar == L"no") {
+                    isExcel = false;
+                }
+                else {
+                    wcerr<<"please enter yes or no"<<endl;
+                    return 1;
+                }
                 fs::path directoryPath = tmp;
-                fileProcess my(directoryPath);
-                my.lineAnalyze(directoryPath);
-                my.print();
-                cout<<"finish processing"<<endl;
+                fileProcess fp(directoryPath);
+                fp.lineAnalyze(directoryPath);
+                if (isExcel){
+                    wcout<<L"please enter ouput path and file name(with'.xlsx')"<<endl;
+                    wstring outputPath;
+                    wcin>>outputPath;
+                    wcout << L"Debug: Output path is " << outputPath << endl;
+                    fp.excelPrint(outputPath);
+                } else {
+                    fp.print();
+                }
+                wcout<<L"finish processing"<<endl;
             } catch (const fs::filesystem_error& e) {
                 wcerr << L"file system error: " << e.what() << endl;
             } catch (const std::exception& e) {

@@ -7,19 +7,21 @@
 #include <windows.h>
 #include <iomanip>
 #include <locale>
+#include <OpenXLSX.hpp>
+#include <codecvt>
 using namespace std;
 namespace fs = std::filesystem;
 
 class fileNode {
 public:
     fileNode(wstring _fileName, int _comment, int _blank, int _statement, int _fileNum)
-            : fileName(_fileName), comment(_comment), blank(_blank),
-              statement(_statement), fileNum(_fileNum), next(nullptr) {}
+            : fileName(_fileName), commentNum(_comment), blankNum(_blank),
+              statementNum(_statement), fileNum(_fileNum), next(nullptr) {}
 
     wstring fileName;
-    int comment;
-    int blank;
-    int statement;
+    int commentNum;
+    int blankNum;
+    int statementNum;
     int fileNum;
     fileNode* next;
 };
@@ -32,8 +34,8 @@ private:
 
 public:
     fileProcess(fs::path add) : directoryPath(add), p(nullptr), len(0) {}
-
-    void add(wstring _fileName, int _comment, int _blank, int _statement, int _fileNum);
+    void excelPrint(wstring directoryOutputPath);
+    void add(wstring _fileName, int _commentNum, int _blankNum, int _statementNum, int _fileNum);
     void lineAnalyze(fs::path directoryPath);
     void print();
     ~fileProcess();
