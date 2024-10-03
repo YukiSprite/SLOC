@@ -13,6 +13,6 @@
 
 
 #### 期望输出：
-输出以表格形式呈现（考虑后续改进为excel表格），第一行是标题。从左到右为totally x items, 该列从上往下为tatal，average和扫描到的各个文件的文件名。之后是statement, comment和blank。内容是不同文件中这些行的行数。然后是perBlank，perComment，这两列按照百分比的形式表达了blank与comment在不同文件中的占比。sources列的内容是包含的文件数量，avgStmt是平均statement数量。avgLine是平均每个文件的代码行数
+输出以表格形式呈现（已增加excel表格输出功能），第一行是标题。从左到右为totally x items, 该列从上往下为tatal，average和扫描到的各个文件的文件名。之后是statement, comment和blank。内容是不同文件中这些行的行数。然后是perBlank，perComment，这两列按照百分比的形式表达了blank与comment在不同文件中的占比。sources列的内容是包含的文件数量，avgStmt是平均statement数量。avgLine是平均每个文件的代码行数
 
 
